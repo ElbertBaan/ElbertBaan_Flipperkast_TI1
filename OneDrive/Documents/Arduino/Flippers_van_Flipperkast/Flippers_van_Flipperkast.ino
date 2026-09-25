@@ -1,50 +1,41 @@
-#include <LiquidCrystal.h>
 #include <Servo.h>
-
-LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
 Servo motorlinks;
 Servo motorrechts;
 
-const int knopLinks = 10;
-const int knopRechts = 9;
+const int flipperlinks = 11;
+const int flipperrechts = 10;
 
 void setup() {
+  pinMode(flipperlinks, INPUT_PULLUP);
+  pinMode(flipperrechts, INPUT_PULLUP);
 
-  pinMode(knopLinks, INPUT_PULLUP);
-  pinMode(knopRechts, INPUT_PULLUP);
+  motorlinks.attach(9);
+  motorrechts.attach(8);
 
-  motorlinks.attach(8);
-  motorrechts.attach(7);
+  motorlinks.write(0);
+  motorrechts.write(0);
 
-  lcd.begin(16, 2);
-
-  lcd.setCursor(0, 0);
-  lcd.print("LCD werkt!");
-
-  lcd.setCursor(0, 1);
-  lcd.print("Servo test");
+  Serial.begin(9600);
 }
 
 void loop() {
 
-  if (digitalRead(knopLinks) == LOW) {
-    motorlinks.write(90);
-
-    lcd.setCursor(0, 1);
-    lcd.print("Links        ");
-  }
-  else {
+  // Linker flipper
+  if (digitalRead(flipperlinks) == LOW) {
+    motorlinks.write(95);
+    Serial.println("Links");
+  } else {
     motorlinks.write(0);
   }
 
-  if (digitalRead(knopRechts) == LOW) {
-    motorrechts.write(90);
-
-    lcd.setCursor(0, 1);
-    lcd.print("Rechts       ");
-  }
-  else {
+  // Rechter flipper
+  if (digitalRead(flipperrechts) == LOW) {
+    motorrechts.write(95);
+    Serial.println("Rechts");
+  } else {
     motorrechts.write(0);
   }
+
+  delay(10);
 }
